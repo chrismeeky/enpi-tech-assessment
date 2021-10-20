@@ -25,3 +25,12 @@ pre {
   font-size: 1.5em;
   fill: #635f5d;
 }
+
+.dropdowns {
+  width: fit-content;
+  margin: auto;
+  margin-top: 2rem;
+}
+.dropdowns span {
+  margin: 0 1rem;
+}
