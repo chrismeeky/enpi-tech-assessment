@@ -4,6 +4,8 @@ import { useData } from "./useData";
 import { AxisBottom } from "./AxisBottom";
 import { AxisLeft } from "./AxisLeft";
 import { Marks } from "./Marks";
+import { AxisSelect } from "./AxisSelect";
+import { SelectionTable } from "./SelectionTable";
 import "./styles.css";
 
 const width = 960;
@@ -23,6 +25,7 @@ export const ScatterPlot = () => {
     xAxisLabel: "J Score",
     yAxisLabel: "Receptor Average Quality",
   });
+  const [highlightedPoints, setHighlightedPoints] = useState([]);
   const brushRef = useRef();
 
   const innerHeight = height - margin.top - margin.bottom;
@@ -64,9 +67,12 @@ export const ScatterPlot = () => {
       if (event.selection) {
         const invertedScale = event.selection.map(xScale.invert);
 
-        console.log("filtered", invertedScale);
-
         setBrushExtent(event.selection && event.selection.map(xScale.invert));
+
+        const highlighted = data.filter(
+          (d) => xValue(d) >= invertedScale[0] && xValue(d) <= invertedScale[1]
+        );
+        setHighlightedPoints(highlighted);
       }
     });
   }, [innerWidth, innerHeight, data]);
@@ -89,18 +95,6 @@ export const ScatterPlot = () => {
 
   const xAxisTickFormat = siFormat;
 
-  const AxisSelect = ({ tagColumns, handleAxisChange, name, value }) => (
-    <select
-      key={name}
-      onChange={(event) => handleAxisChange(name, event.target.value)}
-      value={value}
-    >
-      {tagColumns.map((label) => (
-        <option key={label}>{label}</option>
-      ))}
-    </select>
-  );
-
   const handleAxisChange = (name, value) => {
     setAxisLabels({
       ...axisLabels,
@@ -109,7 +103,7 @@ export const ScatterPlot = () => {
   };
 
   return (
-    <>
+    <div className="plot">
       <div className="dropdowns">
         <AxisSelect
           name="xAxisLabel"
@@ -174,27 +168,12 @@ export const ScatterPlot = () => {
           <g ref={brushRef} />
         </g>
       </svg>
-
-      <table class="table">
-        <thead>
-          <tr>
-            <th scope="col">ID</th>
-            <th scope="col">CDR3</th>
-          </tr>
-        </thead>
-        <tbody>
-          {data.map(
-            (d) =>
-              xValue(d) >= brushExtent[0] &&
-              xValue(d) <= brushExtent[1] && (
-                <tr>
-                  <td>{d.id}</td>
-                  <td>{d.tags.airr["CDR3 Nucleotides"]}</td>
-                </tr>
-              )
-          )}
-        </tbody>
-      </table>
-    </>
+      {highlightedPoints.length > 10 && (
+        <p>
+          Selected points <strong>{highlightedPoints.length}</strong>
+        </p>
+      )}
+      <SelectionTable highlightedPoints={highlightedPoints} />
+    </div>
   );
 };

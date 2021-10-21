@@ -1,7 +1,7 @@
-pre {
-  font-size: 5em;
+.plot p {
+  width: fit-content;
+  margin: auto;
 }
-
 .tick line {
   stroke: #c0c0bb;
 }
