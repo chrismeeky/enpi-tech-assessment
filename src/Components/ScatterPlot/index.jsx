@@ -30,7 +30,7 @@ export const ScatterPlot = () => {
 
   const innerHeight = height - margin.top - margin.bottom;
   const innerWidth = width - margin.left - margin.right;
-  const tickOffset = 10;
+  const tickOffset = 15;
 
   const xAxisLabelOffset = 55;
   const yAxisLabelOffset = 55;
@@ -173,7 +173,11 @@ export const ScatterPlot = () => {
           Selected points <strong>{highlightedPoints.length}</strong>
         </p>
       )}
-      <SelectionTable highlightedPoints={highlightedPoints} />
+      {!highlightedPoints.length ? (
+        <p>Select some points to view details</p>
+      ) : (
+        <SelectionTable highlightedPoints={highlightedPoints} />
+      )}
     </div>
   );
 };

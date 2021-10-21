@@ -16,7 +16,10 @@ export const Marks = ({
           cy={yScale(yValue(d))}
           r={circleRadius}
           fill={
-            xValue(d) >= brushExtent[0] && xValue(d) <= brushExtent[1] && "red"
+            xValue(d) > 0 &&
+            xValue(d) >= brushExtent[0] &&
+            xValue(d) <= brushExtent[1] &&
+            "red"
           }
           key={d.id}
         >
