@@ -15,7 +15,9 @@ export const Marks = ({
           cx={xScale(xValue(d))}
           cy={yScale(yValue(d))}
           r={circleRadius}
-          fill={brushExtent.includes(xValue(d)) && "red"}
+          fill={
+            xValue(d) >= brushExtent[0] && xValue(d) <= brushExtent[1] && "red"
+          }
           key={d.id}
         >
           <title>{toolTipFormat(xValue(d))}</title>

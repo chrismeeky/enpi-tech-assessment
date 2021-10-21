@@ -61,8 +61,13 @@ export const ScatterPlot = () => {
     ]);
     brush(select(brushRef.current));
     brush.on("end", (event) => {
-      console.log("ddddd", event.selection.map(xScale.invert));
-      setBrushExtent(event.selection && event.selection.map(xScale.invert));
+      if (event.selection) {
+        const invertedScale = event.selection.map(xScale.invert);
+
+        console.log("filtered", invertedScale);
+
+        setBrushExtent(event.selection && event.selection.map(xScale.invert));
+      }
     });
   }, [innerWidth, innerHeight, data]);
 
@@ -169,6 +174,27 @@ export const ScatterPlot = () => {
           <g ref={brushRef} />
         </g>
       </svg>
+
+      <table class="table">
+        <thead>
+          <tr>
+            <th scope="col">ID</th>
+            <th scope="col">CDR3</th>
+          </tr>
+        </thead>
+        <tbody>
+          {data.map(
+            (d) =>
+              xValue(d) >= brushExtent[0] &&
+              xValue(d) <= brushExtent[1] && (
+                <tr>
+                  <td>{d.id}</td>
+                  <td>{d.tags.airr["CDR3 Nucleotides"]}</td>
+                </tr>
+              )
+          )}
+        </tbody>
+      </table>
     </>
   );
 };

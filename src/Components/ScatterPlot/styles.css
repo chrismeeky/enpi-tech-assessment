@@ -34,3 +34,15 @@ pre {
 .dropdowns span {
   margin: 0 1rem;
 }
+
+.table {
+  min-width: 60%;
+  margin: auto;
+  margin-top: 3rem;
+  text-align: center;
+}
+
+.table td {
+  max-width: 50rem !important;
+  overflow: hidden !important;
+}
