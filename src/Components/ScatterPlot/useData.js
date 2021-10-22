@@ -22,7 +22,7 @@ export const useData = () => {
     };
 
     // format data to an array of
-    const dataArray = Object.values(bioData).slice(0, 100);
+    const dataArray = Object.values(bioData);
     dataArray.forEach(row);
     setData(dataArray)
     console.log(dataArray);

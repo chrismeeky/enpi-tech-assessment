@@ -1,5 +1,5 @@
 export const SelectionTable = ({ highlightedPoints }) => (
-  <table class="table">
+  <table className="table">
     <thead>
       <tr>
         <th scope="col">ID</th>
@@ -7,8 +7,8 @@ export const SelectionTable = ({ highlightedPoints }) => (
       </tr>
     </thead>
     <tbody>
-      {highlightedPoints.map((d) => (
-        <tr>
+      {highlightedPoints.map((d, index) => (
+        <tr key={index}>
           <td>{d.id}</td>
           <td>{d.tags.airr["CDR3 Nucleotides"]}</td>
         </tr>

@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import { scaleLinear, extent, brushX, select, format } from "d3";
+import { scaleLinear, extent, brush, select, format } from "d3";
 import { useData } from "./useData";
 import { AxisBottom } from "./AxisBottom";
 import { AxisLeft } from "./AxisLeft";
@@ -19,7 +19,7 @@ const margin = {
 
 export const ScatterPlot = () => {
   const data = useData();
-  const [brushExtent, setBrushExtent] = useState([]);
+  const [brushExtent, setBrushExtent] = useState([[], []]);
   const [tagColumns, setTagColumns] = useState([]);
   const [axisLabels, setAxisLabels] = useState({
     xAxisLabel: "J Score",
@@ -58,19 +58,30 @@ export const ScatterPlot = () => {
   }, [data]);
 
   useEffect(() => {
-    const brush = brushX().extent([
+    const brushSelector = brush().extent([
       [0, 0],
       [innerWidth, innerHeight],
     ]);
-    brush(select(brushRef.current));
-    brush.on("end", (event) => {
+    brushSelector(select(brushRef.current));
+    brushSelector.on("end", (event) => {
       if (event.selection) {
-        const invertedScale = event.selection.map(xScale.invert);
+        const selectionCordinates = event.selection;
+        const targetX1 = selectionCordinates[0][0];
+        const targetY1 = selectionCordinates[0][1];
+        const targetX2 = selectionCordinates[1][0];
+        const targetY2 = selectionCordinates[1][1];
 
-        setBrushExtent(event.selection && event.selection.map(xScale.invert));
+        const invertedScaleX = [targetX1, targetX2].map(xScale.invert);
+        const invertedScaleY = [targetY2, targetY1].map(yScale.invert);
+
+        setBrushExtent([invertedScaleX, invertedScaleY]);
 
         const highlighted = data.filter(
-          (d) => xValue(d) >= invertedScale[0] && xValue(d) <= invertedScale[1]
+          (d) =>
+            xValue(d) >= invertedScaleX[0] &&
+            xValue(d) <= invertedScaleX[1] &&
+            yValue(d) >= invertedScaleY[0] &&
+            yValue(d) <= invertedScaleY[1]
         );
         setHighlightedPoints(highlighted);
       }
